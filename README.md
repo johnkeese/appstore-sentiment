@@ -46,8 +46,9 @@ python main.py
 ```
 
 Enter the App Store ID for the app you want to analyze when prompted.
+For example, you can find it in URLs like this: https://apps.apple.com/us/app/ltk-creator-guided-shopping/id1154027990 (the id here is 1154027990)
 
-Specify the number of pages of reviews to fetch (each page contains 50 reviews). Press Enter to use the default value.
+Specify the number of pages of reviews to fetch (each page contains 50 reviews). Press Enter to use the default value of 2 pages.
 
 The script will fetch the reviews, perform sentiment and feature analysis, and save the results in a CSV file.
 
