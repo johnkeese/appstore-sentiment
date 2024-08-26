@@ -1,5 +1,6 @@
 import requests
 import csv
+import time
 
 # Base URL for fetching reviews
 base_url = "https://itunes.apple.com/us/rss/customerreviews/page={}/id={}/sortBy=mostRecent/json"
@@ -15,22 +16,27 @@ def get_raw_reviews(app_id="431156417", num_pages=2):
     
         # Loop through the pages
         for page in range(1, num_pages + 1):
-            # Fetching the data from the current page
-            response = requests.get(base_url.format(page, app_id))
-            data = response.json()
+            try:
+                # Fetching the data from the current page
+                response = requests.get(base_url.format(page, app_id))
+                data = response.json()
+        
+                # Parsing the reviews
+                reviews = data['feed'].get('entry', [])
+        
+                # Writing the review data
+                for review in reviews:
+                    title = review['title']['label']
+                    review_content = review['content']['label']
+                    date = review['updated']['label']
+                    rating = review['im:rating']['label']
+        
+                    writer.writerow([title, review_content, date, rating])
+        
+                print(f"Page {page} processed.")
     
-            # Parsing the reviews
-            reviews = data['feed'].get('entry', [])
-    
-            # Writing the review data
-            for review in reviews:
-                title = review['title']['label']
-                review_content = review['content']['label']
-                date = review['updated']['label']
-                rating = review['im:rating']['label']
-    
-                writer.writerow([title, review_content, date, rating])
-    
-            print(f"Page {page} processed.")
+                time.sleep(1)
+            except (requests.exceptions.RequestException, ValueError) as e:
+                print('error in this')
     
     print("CSV file has been created successfully.")
